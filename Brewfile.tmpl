@@ -1,0 +1,99 @@
+{{- if eq .machine "personal" }}
+tap "kamillobinski/thock"
+tap "laishulu/homebrew"
+tap "supabase/tap"
+{{- end }}
+
+# === Core (both machines) ===
+brew "age"
+brew "chezmoi"
+brew "bitwarden-cli"
+
+# === Shell / Prompt (both) ===
+brew "starship"
+brew "tmux"
+brew "zoxide"
+brew "zsh-autosuggestions"
+brew "zsh-completions"
+brew "zsh-syntax-highlighting"
+
+# === CLI utilities (both) ===
+brew "bat"
+brew "direnv"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "gh"
+brew "git-lfs"
+brew "jq"
+brew "lazygit"
+brew "ripgrep"
+brew "wget"
+
+# === Runtime / Version managers (both) ===
+brew "mise"
+brew "pyenv"
+
+# === Security / Auth (both) ===
+brew "gnupg"
+brew "pinentry-mac"
+
+# === Casks (both) ===
+cask "1password-cli"
+
+{{- if eq .machine "work" }}
+
+# === Work-only: Cloud / Infra ===
+brew "tfenv"
+brew "kubernetes-cli"
+brew "clamav"
+cask "aws-vault-binary"
+cask "font-monaspice-nerd-font"
+{{- end }}
+
+{{- if eq .machine "personal" }}
+
+# === Personal-only: dev / build ===
+brew "ast-grep"
+brew "carapace"
+brew "cmake"
+brew "coreutils"
+brew "jj"
+brew "laishulu/homebrew/macism"
+brew "luarocks"
+brew "mkcert"
+brew "neovim"
+brew "supabase/tap/supabase"
+brew "uv"
+brew "z"
+brew "zellij"
+
+# === Personal-only: network / security ===
+brew "cloudflared"
+brew "ettercap"
+brew "nmap"
+
+# === Personal-only: media / graphics ===
+brew "chafa"
+brew "ffmpeg"
+brew "ghostscript"
+brew "imagemagick"
+brew "poppler"
+brew "portaudio"
+brew "resvg"
+brew "sox"
+brew "tectonic"
+brew "yt-dlp"
+
+# === Personal-only: TUI / files ===
+brew "sevenzip"
+brew "yazi"
+
+# === Personal-only: casks ===
+cask "blackhole-2ch"
+cask "font-symbols-only-nerd-font"
+cask "ghostty"
+cask "macfuse"
+cask "miniforge"
+cask "thock"
+{{- end }}

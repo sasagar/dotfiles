@@ -1,5 +1,5 @@
 #!/bin/bash
-# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+# Brewfile hash: {{ include "Brewfile.tmpl" | sha256sum }}
 set -euo pipefail
 
 if ! command -v brew >/dev/null 2>&1; then
@@ -7,4 +7,13 @@ if ! command -v brew >/dev/null 2>&1; then
   exit 1
 fi
 
-brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" | quote }}
+# run_onchange_before_* は ~/Brewfile が配置される前に実行されるため、
+# テンプレートを一時ファイルに render してから brew bundle に渡す。
+TEMP_BREWFILE=$(mktemp -t chezmoi-Brewfile.XXXXXX)
+trap 'rm -f "$TEMP_BREWFILE"' EXIT
+
+cat > "$TEMP_BREWFILE" <<'CHEZMOI_BREWFILE_EOF'
+{{ includeTemplate "Brewfile.tmpl" . -}}
+CHEZMOI_BREWFILE_EOF
+
+brew bundle --file="$TEMP_BREWFILE"
