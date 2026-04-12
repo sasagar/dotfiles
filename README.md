@@ -51,23 +51,59 @@
 brew install chezmoi age
 ```
 
-### 2. age 秘密鍵の配置
+### 2. VaultWarden から age 秘密鍵と chezmoi.toml を取り出す
 
-VaultWarden のセキュアノートから age 秘密鍵を取り出して配置する:
+age 秘密鍵と chezmoi.toml は VaultWarden のセキュアノート
+**`dotfiles / chezmoi age key & config`** に添付されている。
+
+#### Web UI で取り出す場合
+
+1. VaultWarden にログイン
+2. セキュアノート `dotfiles / chezmoi age key & config` を開く
+3. 添付ファイル `key.txt` と `chezmoi.toml` をダウンロード
+4. `~/.config/chezmoi/` に配置
+
+#### Bitwarden CLI で取り出す場合
 
 ```bash
+# 必要なら Bitwarden CLI を先にインストール
+brew install bitwarden-cli
+
+# セルフホストの場合はサーバー URL を設定
+bw config server https://vw.REDACTED.example.com
+
+# ログインして unlock
+bw login                          # 初回のみ
+export BW_SESSION=$(bw unlock --raw)
+
+# アイテム ID を検索
+ITEM_ID=$(bw list items --search "chezmoi age key" | jq -r '.[0].id')
+
+# 添付ファイルをダウンロード
 mkdir -p ~/.config/chezmoi
-# VaultWarden の Web UI もしくは bw CLI から鍵をコピー
-vim ~/.config/chezmoi/key.txt
-chmod 600 ~/.config/chezmoi/key.txt
+bw get attachment key.txt \
+  --itemid "$ITEM_ID" \
+  --output ~/.config/chezmoi/key.txt
+bw get attachment chezmoi.toml \
+  --itemid "$ITEM_ID" \
+  --output ~/.config/chezmoi/chezmoi.toml
+
+chmod 600 ~/.config/chezmoi/key.txt ~/.config/chezmoi/chezmoi.toml
 ```
 
-### 3. chezmoi 設定ファイルの配置
+### 3. chezmoi.toml の machine 変数を調整する
 
-VaultWarden に保存した `chezmoi.toml` をコピーするか、以下をベースに手動で作成する:
+`~/.config/chezmoi/chezmoi.toml` の `machine` をセットアップする PC に合わせて
+`work` / `personal` のいずれかに変更する。
 
 ```toml
-# ~/.config/chezmoi/chezmoi.toml
+[data]
+  machine = "personal"  # または "work"
+```
+
+参考までに chezmoi.toml の構成:
+
+```toml
 encryption = "age"
 
 [age]
@@ -75,7 +111,7 @@ encryption = "age"
   recipient = "<age 公開鍵>"
 
 [data]
-  machine = "personal"  # または "work"
+  machine = "personal"
   email_personal = "<個人メール>"
   email_work = "<会社メール>"
 ```
