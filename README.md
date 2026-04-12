@@ -128,6 +128,53 @@ chezmoi init --apply sasagar/dotfiles
 - テンプレート展開
 - age 暗号化ファイルの復号
 - `run_onchange_*` スクリプトによる Homebrew パッケージと mise ツールのインストール
+- `run_once_install-tpm.sh` による TPM (Tmux Plugin Manager) の自動インストール (personal のみ)
+
+## LAPRAS 用 GPG 鍵の追加 (work PC で初回のみ)
+
+lapras-inc リポジトリで使う GPG 鍵を両PCで共有する手順。**初回は work PC で実行し、その後 personal PC では `chezmoi update` するだけで自動 import される**。
+
+### 前提
+
+- work PC の GPG キーリングに LAPRAS 用の秘密鍵が既に存在する
+- work PC で chezmoi が初期化済み (`chezmoi init --apply sasagar/dotfiles` 済み)
+- age 秘密鍵 (`~/.config/chezmoi/key.txt`) が配置済み
+
+### 手順
+
+```bash
+# 1. LAPRAS 用の鍵 ID を確認
+gpg --list-secret-keys --keyid-format=long
+
+# 2. 鍵をエクスポート (~/.config/gpg-keys/ は本運用で残るパス)
+mkdir -p ~/.config/gpg-keys && chmod 700 ~/.config/gpg-keys
+gpg --armor --export-secret-keys <KEYID> > ~/.config/gpg-keys/lapras.gpg.key
+gpg --armor --export             <KEYID> > ~/.config/gpg-keys/lapras.gpg.pub
+chmod 600 ~/.config/gpg-keys/lapras.gpg.key
+
+# 3. chezmoi 管理下に追加 (秘密鍵は age で暗号化)
+chezmoi add --encrypt ~/.config/gpg-keys/lapras.gpg.key
+chezmoi add           ~/.config/gpg-keys/lapras.gpg.pub
+
+# 4. .chezmoidata.toml の gpg_lapras を実際の KEYID に更新
+chezmoi cd
+# エディタで .chezmoidata.toml を開いて以下のように更新:
+#   gpg_lapras = "<KEYID>"
+
+# 5. 動作確認
+chezmoi apply
+
+# 6. commit & push
+git add -A
+git commit -m "feat: add shared lapras GPG key (encrypted)"
+git push
+```
+
+### 反映される内容
+
+- 両PCの `~/.gitconfig-lapras` に `signingkey = <KEYID>` が追加される
+- `~/ghq/github.com/lapras-inc/` 配下の git commit はこの鍵で自動署名される
+- personal PC で `chezmoi update` すると、暗号化された秘密鍵が decrypt され、`run_onchange_after_import-lapras-gpg.sh` が自動で `gpg --import` を実行する
 
 ## 日常の運用
 
@@ -165,27 +212,34 @@ chezmoi cd               # ソースディレクトリに移動
 
 ```
 .
-├── Brewfile                                      # Homebrew パッケージリスト
-├── dot_bashrc                                    # → ~/.bashrc
+├── .chezmoidata.toml                             # 全マシン共通データ (gpg_lapras 等)
+├── .chezmoiignore                                # 適用対象から除外するパス (machine別)
+├── Brewfile.tmpl                                 # Homebrew パッケージリスト (machine別分岐)
+├── dot_bashrc.tmpl                               # → ~/.bashrc (テンプレート)
 ├── dot_config/
-│   ├── mise/config.toml                          # → ~/.config/mise/config.toml
+│   ├── mise/config.toml.tmpl                     # → ~/.config/mise/config.toml (テンプレート)
 │   └── starship.toml.tmpl                        # → ~/.config/starship.toml (テンプレート)
 ├── dot_fzf.bash                                  # → ~/.fzf.bash
 ├── dot_fzf.zsh                                   # → ~/.fzf.zsh
 ├── dot_gitconfig.tmpl                            # → ~/.gitconfig (テンプレート)
 ├── dot_gitconfig-lapras.tmpl                     # → ~/.gitconfig-lapras (テンプレート)
-├── dot_tmux.conf                                 # → ~/.tmux.conf
-├── dot_vimrc                                     # → ~/.vimrc
+├── dot_tmux.conf.tmpl                            # → ~/.tmux.conf (テンプレート)
+├── dot_tmux/
+│   ├── executable_weather.sh                     # → ~/.tmux/weather.sh (personal のみ)
+│   └── executable_quake.sh                       # → ~/.tmux/quake.sh (personal のみ)
+├── dot_vimrc                                     # → ~/.vimrc (両PC共通)
 ├── dot_zprofile                                  # → ~/.zprofile
-├── dot_zshenv                                    # → ~/.zshenv
-├── dot_zshrc                                     # → ~/.zshrc
+├── dot_zshenv.tmpl                               # → ~/.zshenv (テンプレート)
+├── dot_zshrc.tmpl                                # → ~/.zshrc (テンプレート)
 ├── encrypted_private_dot_zshrc.work.age          # → ~/.zshrc.work (暗号化)
 ├── private_dot_ssh/
 │   ├── config.tmpl                               # → ~/.ssh/config (テンプレート)
 │   ├── encrypted_private_id_ed25519_github.age   # → ~/.ssh/id_ed25519_github (暗号化)
 │   └── id_ed25519_github.pub                     # → ~/.ssh/id_ed25519_github.pub
+├── run_once_install-tpm.sh.tmpl                  # TPM 自動インストール (personal のみ)
 ├── run_onchange_before_install-packages.sh.tmpl  # Brewfile 変更時に brew bundle を実行
-└── run_onchange_after_install-mise-tools.sh.tmpl # mise 設定変更時に mise install を実行
+├── run_onchange_after_install-mise-tools.sh.tmpl # mise 設定変更時に mise install を実行
+└── run_onchange_after_import-lapras-gpg.sh.tmpl  # LAPRAS GPG 鍵の自動 import
 ```
 
 ## ファイル名の命名規則

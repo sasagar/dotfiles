@@ -1,8 +1,33 @@
-{{ if eq .machine "work" -}}
 # Added by OrbStack: 'orb' SSH host for Linux machines
 # This only works if it's at the top of ssh_config (before any Host blocks).
 # This won't be added again if you remove it.
 Include ~/.orbstack/ssh/config
+
+{{ if eq .machine "personal" -}}
+Host *
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+	ServerAliveInterval 60
+	TCPKeepAlive yes
+	IPQoS cs1
+
+Host kent-and-co.com
+	HostName REDACTED-host.REDACTED.example.com
+	User root
+	UseKeychain yes
+	IdentityFile ~/.ssh/conoha20240316_ed25519_2048
+	ProxyCommand /opt/homebrew/bin/cloudflared access ssh --hostname %h
+
+Host oracle1
+	HostName REDACTED-IP
+	User ubuntu
+	UseKeychain yes
+	IdentityFile ~/.ssh/oracle-ssh-key-2024-07-10.key
+
+Host jellyfin
+	HostName REDACTED-IP
+	User root
+	UseKeychain yes
+	IdentityFile ~/.ssh/id_rsa
 
 {{ end -}}
 Host github.com

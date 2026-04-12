@@ -1,4 +1,9 @@
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+{{- if eq .machine "personal" }}
+
+. "$HOME/.local/bin/env"
+. "$HOME/.cargo/env"
+{{- else }}
 
 #AWSume alias to source the AWSume script
 alias awsume="source \$(pyenv which awsume)"
@@ -14,3 +19,4 @@ _awsume() {
     return 0
 }
 complete -F _awsume awsume
+{{- end }}

@@ -1,2 +1,5 @@
 [user]
 	email = {{ .email_work }}
+{{- if ne .gpg_lapras "" }}
+	signingkey = {{ .gpg_lapras }}
+{{- end }}

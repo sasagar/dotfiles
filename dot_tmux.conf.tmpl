@@ -1,0 +1,136 @@
+# プレフィックスキーをctrl+aに変更
+set -g prefix C-a
+
+# デフォルトのプレフィックスキーctrl+bを解除
+unbind C-b
+
+# プレフィックスキー+^でペインを垂直分割する
+bind ^ split-window -h
+
+# プレフィックスキー+-でペインを水平分割する
+bind - split-window -v
+
+# True color / 256色対応
+set -g default-terminal "tmux-256color"
+set-option -ga terminal-overrides ",xterm-256color:Tc"
+
+# マウス操作を有効化
+set-option -g mouse on
+
+# ===== カラーパレット (machine 別) =====
+{{- if eq .machine "personal" }}
+# Catppuccin 系 (amber + violet)
+set -g @col_bg "#333333"
+set -g @col_bg_dark "#222222"
+set -g @col_fg "#F8F8F2"
+set -g @col_session "#fab387"
+set -g @col_active "#cba6f7"
+set -g @col_time "#89dceb"
+set -g @col_date "#fab387"
+set -g @col_muted "#585858"
+{{- else }}
+# Monokai
+set -g @col_bg "#272822"
+set -g @col_bg_dark "#1E1F1C"
+set -g @col_fg "#F8F8F2"
+set -g @col_session "#A6E22E"
+set -g @col_active "#FD971F"
+set -g @col_time "#66D9EF"
+set -g @col_date "#E6DB74"
+set -g @col_muted "#75715E"
+{{- end }}
+
+# ===== Theme =====
+
+# ステータスバー全体
+set -g status-style "fg=#{@col_fg},bg=#{@col_bg}"
+set -g status-interval 1
+
+# ステータスバー左側（セッション名）
+set -g status-left-length 30
+set -g status-left "#[fg=#{@col_bg},bg=#{@col_session},bold] #S #[fg=#{@col_session},bg=#{@col_bg}]"
+
+# ステータスバー右側（日時）
+set -g status-right-length 50
+set -g status-right "#[fg=#{@col_time}]%H:%M:%S #[fg=#{@col_fg}]| #[fg=#{@col_date}]%Y-%m-%d "
+
+# ウィンドウリスト（非アクティブ）
+setw -g window-status-format "#[fg=#{@col_muted}] #I:#W "
+
+# ウィンドウリスト（アクティブ）
+setw -g window-status-current-format "#[fg=#{@col_bg},bg=#{@col_active},bold] #I:#W #[default]"
+
+# ペインボーダー
+set -g pane-border-style "fg=#{@col_muted}"
+set -g pane-active-border-style "fg=#{@col_session}"
+
+# メッセージ
+set -g message-style "fg=#{@col_bg},bg=#{@col_date},bold"
+set -g message-command-style "fg=#{@col_fg},bg=#{@col_bg}"
+
+# コピーモードのハイライト
+setw -g mode-style "fg=#{@col_bg},bg=#{@col_active}"
+
+# ===== Keybinding Hints (Zellij風) =====
+set -g status 2
+set -g status-format[1] "#[align=centre,fg=#{@col_muted},bg=#{@col_bg_dark}]#[fg=#{@col_active},bold]C-a ^#[fg=#{@col_muted},nobold] Split-H #[fg=#{@col_muted}]│ #[fg=#{@col_active},bold]C-a -#[fg=#{@col_muted},nobold] Split-V #[fg=#{@col_muted}]│ #[fg=#{@col_active},bold]C-a c#[fg=#{@col_muted},nobold] New #[fg=#{@col_muted}]│ #[fg=#{@col_active},bold]C-a n#[fg=#{@col_muted},nobold] Next #[fg=#{@col_muted}]│ #[fg=#{@col_active},bold]C-a p#[fg=#{@col_muted},nobold] Prev #[fg=#{@col_muted}]│ #[fg=#{@col_active},bold]C-a d#[fg=#{@col_muted},nobold] Detach #[fg=#{@col_muted}]│ #[fg=#{@col_active},bold]C-a z#[fg=#{@col_muted},nobold] Zoom #[fg=#{@col_muted}]│ #[fg=#{@col_active},bold]C-a [#[fg=#{@col_muted},nobold] Copy"
+{{- if eq .machine "personal" }}
+
+# ==================================================================
+# Personal-only extras
+# ==================================================================
+
+# 追加の基本設定
+set-option -g focus-events on
+set -s escape-time 0
+set -g extended-keys on
+set -as terminal-features 'xterm*:extkeys'
+
+# split-window でカレントディレクトリを引き継ぐ
+bind ^ split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+# vi モードのキーバインド
+setw -g mode-keys vi
+bind -T copy-mode-vi v send -X begin-selection
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+
+# ウィンドウ移動 (C-p / C-n)
+bind -n C-p previous-window
+bind -n C-n next-window
+
+# pane-border カスタム
+set -g pane-border-status top
+set -g pane-border-format ""
+set -g pane-border-lines heavy
+
+# active pane の背景色を差別化
+set -g window-style 'bg=#333333'
+set -g window-active-style 'bg=#212121'
+
+# tmux weather / quake 表示用変数
+set -g @weather_display " Loading... "
+set -g @quake_display ""
+
+# status-right を weather/quake 付きに上書き
+set -g status-right-length 150
+set -g status-right '#{@quake_display}#{@weather_display} #[fg=#{@col_date},bg=default]#[fg=#{@col_bg},bg=#{@col_date},bold] %m/%d(%a) %H:%M:%S #[fg=#{@col_date},bg=default]'
+
+# ローカル上書き設定
+if-shell "[ -f ~/.tmux.conf.local ]" "source-file ~/.tmux.conf.local"
+
+# 天気 / 地震情報をバックグラウンドで更新
+run-shell -b "while true; do ~/.tmux/weather.sh; sleep 600; done"
+run-shell -b "while true; do ~/.tmux/quake.sh; sleep 15; done"
+
+# ===== TPM (セッション保存・復元) =====
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+set -g @continuum-restore 'on'
+set -g @resurrect-capture-pane-contents 'on'
+
+# TPM の初期化 (必ず一番下に記述)
+run '~/.tmux/plugins/tpm/tpm'
+{{- end }}

@@ -1,1 +1,44 @@
+syntax on
+
 set rtp+=/opt/homebrew/opt/fzf
+
+" ====================================================================
+" KTRZ Monokai Style for sasapiyo (#212121 Optimized)
+" ====================================================================
+
+set termguicolors
+
+" --- 基本色設定 ---
+" 背景色を #212121 に設定し、ステータスライン(#333333)と分離
+hi Normal       guifg=#F8F8F2 guibg=#212121
+hi NonText      guifg=#3B3B3B guibg=#212121
+hi CursorLine   guibg=#2c2c2c " 背景よりわずかに明るいグレー
+hi LineNr       guifg=#90908a guibg=#212121
+hi CursorLineNr guifg=#FD971F guibg=#212121 gui=bold
+
+" 左端の記号列(LSPやGit Gutter用)の背景も合わせる
+hi SignColumn   guibg=#212121
+hi VertSplit    guifg=#333333 guibg=#212121 gui=none
+
+" --- 構文ハイライト (KTRZ Monokai 準拠) ---
+hi Comment      guifg=#888888 gui=italic
+hi Constant     guifg=#AE81FF
+hi String       guifg=#E6DB74
+hi Character    guifg=#E6DB74
+hi Number       guifg=#AE81FF
+hi Boolean      guifg=#AE81FF
+
+hi Identifier   guifg=#FD971F gui=none
+hi Statement    guifg=#F92672 gui=bold
+hi PreProc      guifg=#A6E22E
+hi Type         guifg=#66D9EF gui=italic
+hi Special      guifg=#AE81FF
+
+" --- UI要素 ---
+hi Search       guifg=#212121 guibg=#E6DB74
+hi Visual       guibg=#3E3D32
+hi MatchParen   guifg=#F92672 guibg=NONE gui=bold,underline
+
+" エラー・警告 (地震速報の赤 #f38ba8 と統一)
+hi ErrorMsg     guifg=#F8F8F0 guibg=#F38BA8
+hi WarningMsg   guifg=#F8F8F0 guibg=#FD971F

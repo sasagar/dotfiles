@@ -1,0 +1,182 @@
+# ==================================================================
+# Common settings (both machines)
+# ==================================================================
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# --- zsh 補完システム初期化 ---
+autoload -Uz compinit && compinit
+
+# インタラクティブシェルのコメント有効化
+setopt interactive_comments
+
+# zsh-completions のパス追加 (brew)
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+fi
+
+# 補完の挙動設定
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# 履歴設定
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+
+# --- Editor ---
+export EDITOR=vi
+
+# --- zsh-autosuggestions (brew) ---
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# --- fzf ---
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS="--preview 'bat --color=always --style=header,grid --line-range :500 {}'"
+
+# --- モダンコマンドのエイリアス ---
+alias ls='eza --icons --git'
+alias l='eza -lh --icons --git'
+alias la='eza -a --icons --git'
+alias ll='eza -alh --icons --git'
+alias cat='bat'
+
+# --- mise (Node / pnpm 等のランタイム管理) ---
+eval "$(mise activate zsh)"
+
+# --- Starship ---
+export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+eval "$(starship init zsh)"
+
+# --- 1Password 2FA helper ---
+function 2fa() {
+  local code=$(op item get "$1" --otp)
+  echo -n "$code" | pbcopy
+  echo "OTP for $1 copied to clipboard: $code"
+}
+
+# --- Bitwarden / VaultWarden unlock helper ---
+bwu() {
+  export BW_SESSION=$(bw unlock --raw)
+}
+
+{{- if eq .machine "personal" }}
+
+# ==================================================================
+# Personal-only
+# ==================================================================
+
+# 秘密ファイルが存在する場合のみ読み込む
+[ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
+
+# --- Local bin env ---
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
+
+# --- cargo / rust ---
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+# --- bun ---
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# --- Antigravity ---
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# --- Cipher ---
+CIPHER_EMBEDDER="local"
+
+# --- conda (miniforge) ---
+__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+        . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+
+# --- tmux ---
+alias tmux='tmux -u'
+export WEATHER_API="eca4caee1c0156119be456863e1fbc9b"
+
+# --- SSH接続時のtmuxステータスバー制御 ---
+ssh() {
+    local tmux_hidden=false
+    if [ -n "$TMUX" ]; then
+        if command ssh -o ConnectTimeout=1 -q "$@" "tmux ls" >/dev/null 2>&1; then
+            tmux set status off
+            tmux_hidden=true
+        fi
+    fi
+    command ssh "$@"
+    if [ "$tmux_hidden" = true ]; then
+        tmux set status on
+    fi
+}
+
+# --- Zellij alias ---
+alias zj='zellij --layout default'
+
+{{- else if eq .machine "work" }}
+
+# ==================================================================
+# Work-only
+# ==================================================================
+
+# --- Python (brew) ---
+export PATH="$(brew --prefix python)/libexec/bin:$PATH"
+
+# --- ghq + fzf (cf: change directory to ghq-managed repo) ---
+alias cf='cd $(ghq list --full-path | fzf)'
+
+# --- AWSume ---
+alias awsume="source $(pyenv which awsume)"
+_awsume() {
+    local -a opts
+    opts=(${(f)"$(awsume-autocomplete)"})
+    _describe 'awsume' opts
+}
+compdef _awsume awsume
+
+# --- direnv ---
+eval "$(direnv hook zsh)"
+
+# --- Work-specific settings (encrypted, chezmoi-managed) ---
+[ -f ~/.zshrc.work ] && source ~/.zshrc.work
+
+{{- end }}
+
+# ==================================================================
+# Must be at the bottom
+# ==================================================================
+
+# --- zoxide (cdの置き換え) ---
+{{- if eq .machine "personal" }}
+if [[ "$CLAUDECODE" != "1" ]]; then
+  eval "$(zoxide init zsh)"
+  alias cd='z'
+  alias zi='z -i'
+fi
+{{- else }}
+eval "$(zoxide init zsh)"
+alias cd='z'
+alias zi='z -i'
+{{- end }}
+
+# --- シンタックスハイライト（必ず最後に読み込む） ---
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ZSH_HIGHLIGHT_STYLES[comment]='fg=242'

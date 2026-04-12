@@ -1,13 +1,24 @@
 [user]
 	name = SASAGAWA Kiyoshi
 	email = {{ .email_personal }}
+	signingkey = C872B16845393388
 [includeIf "gitdir:~/ghq/github.com/lapras-inc/"]
 	path = ~/.gitconfig-lapras
+[init]
+	defaultBranch = main
 [pull]
 	ff = only
 [core]
 	autocrlf = input
 	editor = code --wait
+[commit]
+	gpgsign = true
+[tag]
+	gpgSign = true
+{{- if eq .machine "personal" }}
+[coderabbit]
+	machineId = cli/4b44134edc4046af9dc17378b55b82b9
+{{- end }}
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f

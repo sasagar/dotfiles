@@ -1,0 +1,51 @@
+#!/bin/bash
+# Trigger hash: {{ .gpg_lapras }}
+#
+# LAPRAS 用 GPG 秘密鍵を GPG キーリングに import する。
+# 初回および .chezmoidata.toml の gpg_lapras 値が変わる度に実行される。
+#
+# 鍵マテリアルは chezmoi 管理下の以下に配置される (age 暗号化):
+#   ~/.config/gpg-keys/lapras.gpg.key   (秘密鍵, 600)
+#   ~/.config/gpg-keys/lapras.gpg.pub   (公開鍵)
+#
+# 追加方法 (どちらか一方のPCで1回だけ):
+#   mkdir -p ~/.config/gpg-keys && chmod 700 ~/.config/gpg-keys
+#   gpg --armor --export-secret-keys <KEYID> > ~/.config/gpg-keys/lapras.gpg.key
+#   gpg --armor --export             <KEYID> > ~/.config/gpg-keys/lapras.gpg.pub
+#   chmod 600 ~/.config/gpg-keys/lapras.gpg.key
+#   chezmoi add --encrypt ~/.config/gpg-keys/lapras.gpg.key
+#   chezmoi add           ~/.config/gpg-keys/lapras.gpg.pub
+#   # .chezmoidata.toml の gpg_lapras を <KEYID> に更新
+#   chezmoi cd && git add -A && git commit -m "add: lapras GPG key (encrypted)" && git push
+
+set -euo pipefail
+
+{{ if eq .gpg_lapras "" -}}
+echo "gpg_lapras is empty — skipping lapras GPG key import"
+exit 0
+{{- end }}
+
+KEY_PATH="$HOME/.config/gpg-keys/lapras.gpg.key"
+PUB_PATH="$HOME/.config/gpg-keys/lapras.gpg.pub"
+
+if [ ! -f "$KEY_PATH" ] || [ ! -f "$PUB_PATH" ]; then
+  echo "lapras GPG key files not yet present at ~/.config/gpg-keys/"
+  echo "  See comments in run_onchange_after_import-lapras-gpg.sh.tmpl for provisioning steps."
+  exit 0
+fi
+
+if ! command -v gpg >/dev/null 2>&1; then
+  echo "gpg not installed — skipping import"
+  exit 0
+fi
+
+FP=$(gpg --show-keys --with-colons "$PUB_PATH" 2>/dev/null | awk -F: '/^fpr:/{print $10; exit}' || true)
+if [ -n "$FP" ] && gpg --list-secret-keys "$FP" >/dev/null 2>&1; then
+  echo "lapras GPG key already in keyring ($FP)"
+  exit 0
+fi
+
+echo "Importing lapras GPG key from $KEY_PATH"
+gpg --import "$PUB_PATH"
+gpg --import "$KEY_PATH"
+echo "Done. Verify with: gpg --list-secret-keys {{ .gpg_lapras }}"
