@@ -4,4 +4,4 @@
 # LAPRAS専用 GPG 鍵の Key ID (long format, 16桁)
 # 空の場合: lapras リポジトリでも global の signingkey が使われる
 # 設定後: lapras-inc リポジトリで自動的にこの鍵で署名される
-gpg_lapras = ""
+gpg_lapras = "B8D4D1B7D959D552"
