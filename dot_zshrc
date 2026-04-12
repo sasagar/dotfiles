@@ -26,11 +26,6 @@ export FZF_DEFAULT_OPTS="--preview 'bat --color=always --style=header,grid --lin
 # fzf追加設定
 alias cf='cd $(ghq list --full-path | fzf)'
 
-# --- zoxide (cdの置き換え) ---
-eval "$(zoxide init zsh)"
-alias cd='z'
-alias zi='z -i' # fzfを使ったインタラクティブ移動
-
 # --- starship (プロンプトの初期化) ---
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 eval "$(starship init zsh)"
@@ -66,3 +61,8 @@ bwu() {
 
 # --- Work-specific settings (encrypted, chezmoi-managed) ---
 [ -f ~/.zshrc.work ] && source ~/.zshrc.work
+
+# --- zoxide (cdの置き換え) ※シェル設定ファイルの末尾で初期化すること ---
+eval "$(zoxide init zsh)"
+alias cd='z'
+alias zi='z -i' # fzfを使ったインタラクティブ移動
