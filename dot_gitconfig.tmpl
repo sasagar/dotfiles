@@ -1,0 +1,15 @@
+[user]
+	name = SASAGAWA Kiyoshi
+	email = {{ .email_personal }}
+[includeIf "gitdir:~/ghq/github.com/lapras-inc/"]
+	path = ~/.gitconfig-lapras
+[pull]
+	ff = only
+[core]
+	autocrlf = input
+	editor = code --wait
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

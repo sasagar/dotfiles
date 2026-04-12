@@ -1,0 +1,385 @@
+{{ if eq .machine "work" -}}
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](color_dark)\
+$os\
+$username\
+[](bg:color_blue fg:color_dark)\
+$directory\
+[](fg:color_blue bg:color_green)\
+$git_branch\
+$git_status\
+[](fg:color_green bg:color_lightblue)\
+$c\
+$cpp\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:color_lightblue bg:color_bg3)\
+$docker_context\
+$conda\
+$pixi\
+[](fg:color_bg3 bg:color_bg1)\
+$time\
+[ ](fg:color_bg1)\
+$line_break$character"""
+
+palette = 'lapras'
+
+[palettes.lapras]
+color_dark = '#1A202C'
+color_blue = '#00B5AD'
+color_green = '#7CD327'
+color_lightblue = '#4FD1C5'
+color_fg0 = '#fbf1c7'
+color_bg1 = '#3c3836'
+color_bg3 = '#665c54'
+color_teal = '#98971a'
+color_purple = '#b16286'
+color_red = '#cc241d'
+color_yellow = '#d79921'
+
+[os]
+disabled = false
+style = "bg:color_dark fg:color_fg0"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
+
+[username]
+show_always = true
+style_user = "bg:color_dark fg:color_fg0"
+style_root = "bg:color_dark fg:color_fg0"
+format = '[ $user ]($style)'
+
+[directory]
+style = "fg:color_bg1 bg:color_blue"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+[git_branch]
+symbol = ""
+style = "bg:color_green"
+format = '[[ $symbol $branch ](fg:color_bg3 bg:color_green)]($style)'
+
+[git_status]
+style = "bg:color_green"
+format = '[[($all_status$ahead_behind )](fg:color_bg3 bg:color_green)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[c]
+symbol = " "
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[cpp]
+symbol = " "
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[php]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[java]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[python]
+symbol = ""
+style = "bg:color_lightblue"
+format = '[[ $symbol( $version) ](fg:color_bg3 bg:color_lightblue)]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:color_bg3"
+format = '[[ $symbol( $context) ](fg:color_fg0 bg:color_bg3)]($style)'
+
+[conda]
+style = "bg:color_bg3"
+format = '[[ $symbol( $environment) ](fg:color_fg0 bg:color_bg3)]($style)'
+
+[pixi]
+style = "bg:color_bg3"
+format = '[[ $symbol( $version)( $environment) ](fg:color_fg0 bg:color_bg3)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:color_bg1"
+format = '[[  $time ](fg:color_fg0 bg:color_bg1)]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[](bold fg:color_teal)'
+error_symbol = '[](bold fg:color_red)'
+vimcmd_symbol = '[](bold fg:color_green)'
+vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
+vimcmd_replace_symbol = '[](bold fg:color_purple)'
+vimcmd_visual_symbol = '[](bold fg:color_yellow)'
+{{ else -}}
+format = """
+$os\
+$sudo\
+$custom\
+$direnv\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$git_metrics\
+$fill\
+$conda\
+$python\
+$lua\
+$rust\
+\n$character\
+"""
+
+right_format = """
+$cmd_duration\
+$time\
+"""
+
+###########################################
+[os.symbols]
+Macos = "  "
+Linux = " 󰌽 "
+Ubuntu = "  "
+Debian = "  "
+
+###########################################
+[os]
+disabled = false
+format = """
+[](fg:#89b4fa)\
+[$symbol]($style)\
+[](fg:#89b4fa)\
+"""
+style = "fg:#313244 bg:#89b4fa"
+
+###########################################
+[sudo]
+disabled = false
+symbol = ' 󰿆 sudo'
+format = """
+[](fg:#eba0ac)\
+[$symbol]($style)\
+[](fg:#eba0ac)\
+"""
+style = "bold fg:#313244 bg:#eba0ac "
+
+###########################################
+[custom.ime_status]
+command = "$HOME/dotfiles/bin/ime_status.sh"
+when = "test -n \"$($HOME/dotfiles/bin/ime_status.sh)\""
+format = """
+[](fg:#f9e2af)\
+[$output]($style)\
+[](fg:#f9e2af)\
+"""
+style = "bold fg:#313244 bg:#f9e2af"
+
+###########################################
+[custom.venv]
+command = "basename \"$VIRTUAL_ENV\""
+when = "test -n \"$VIRTUAL_ENV\""
+format = """
+[](fg:#cba6f7)\
+[$output]($style)\
+[](fg:#cba6f7)\
+"""
+style = "bold fg:#313244 bg:#cba6f7"
+
+###########################################
+[custom.jj]
+when = "jj root"
+command = """
+jj log -r @ -n 1 --no-graph --color never --template 'change_id.short() ++ if(bookmarks, " (" ++ bookmarks.join(", ") ++ ")")' | tr -d '\n'
+"""
+style = "bold fg:#313244 bg:#fab387"
+format = "[](fg:#fab387)[󰘬 $output]($style)[](fg:#fab387)"
+
+###########################################
+[direnv]
+disabled = false
+format = """
+[](fg:#89dceb)\
+[$symbol$allowed]($style)\
+[](fg:#89dceb)\
+"""
+style = "bold fg:#313244 bg:#89dceb"
+
+###########################################
+[conda]
+format = """
+[](fg:#2e8b57)\
+[via $symbol$environment]($style)\
+[](fg:#2e8b57)\
+"""
+symbol = "🐍 "
+style = "bold fg:#313244 bg:#2e8b57"
+ignore_base = true
+
+###########################################
+[directory]
+truncation_length = 6
+truncation_symbol = ' '
+truncate_to_repo = false
+home_symbol = '󰋞 ~'
+read_only = ' 󰌾 '
+format = """
+[](fg:#b4befe)\
+[$path]($style)\
+[$read_only]($read_only_style)\
+[](fg:#b4befe)\
+"""
+style = 'bold fg:#313244 bg:#b4befe'
+read_only_style = 'bold fg:#313244 bg:#b4befe'
+
+###########################################
+[git_branch]
+symbol = '  '
+truncation_length = 4
+truncation_symbol = ''
+style = 'bold fg:#89dceb bg:#45475a'
+format = """
+[](fg:#45475a)\
+[$symbol$branch(:$remote_branch)]($style)\
+"""
+
+###########################################
+[git_status]
+disabled = false
+style = 'bold fg:#eba0ac bg:#45475a'
+
+conflicted = '='
+ahead = '⇡${count}'
+behind = '⇣${count}'
+diverged = '⇕'
+up_to_date = '✓'
+untracked = '?'
+
+stashed = '󰏗 ${count}'
+
+modified = '!${count}'
+renamed = '»'
+deleted = '✘'
+
+format = """[  ](fg:#89dceb bg:#45475a)[$all_status$ahead_behind]($style)"""
+
+###########################################
+[git_metrics]
+disabled = false
+added_style = 'bold fg:#a6e3a1 bg:#45475a'
+deleted_style = 'bold fg:#89b4fa  bg:#45475a'
+format = """
+[  ](fg:#89dceb bg:#45475a)\
+[+$added]($added_style)[-$deleted]($deleted_style)[](fg:#45475a)\
+"""
+
+###########################################
+[fill]
+symbol = '─'
+style = 'fg:#89b4fa bg:none'
+
+###########################################
+[python]
+pyenv_version_name = false
+symbol = '[ ](fg:#f9e2af bg:#8093fd)'
+format = '[](fg:#8093fd)[ ${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)[](fg:#8093fd)'
+style = 'bold fg:#313244 bg:#8093fd'
+
+###########################################
+[lua]
+symbol = "[ ](fg:#1e66f5 bg:#89b4fa)"
+format = '[](fg:#89b4fa)[ ${symbol}(${version})]($style)[](fg:#89b4fa)'
+style = 'bold fg:#313244 bg:#89b4fa'
+
+###########################################
+[rust]
+symbol = "[󱘗 ](fg:#e64553 bg:#eba0ac)"
+format = '[](fg:#eba0ac)[ ${symbol}(${version})]($style)[](fg:#eba0ac)'
+style = 'bold fg:#313244 bg:#eba0ac'
+
+###########################################
+[cmd_duration]
+show_milliseconds = true
+min_time = 100
+format = '[󰞌 $duration  ](fg:#f9e2af)'
+
+###########################################
+[time]
+disabled = false
+format = '[ $time](bold fg:#6c7086)'
+time_format = '%T'
+
+###########################################
+[character]
+success_symbol = '[>](bold #74c7ec)[>](bold #b4befe)[>](bold #89b4fa) [\$](bold #74c7ec)'
+error_symbol = '[>](bold #eba0ac)[>](bold #f38ba8)[>](bold #f17497) [\$](bold #eba0ac)'
+{{ end -}}
