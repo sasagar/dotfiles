@@ -38,6 +38,8 @@
 |---|---|
 | `~/.ssh/id_ed25519_github` | GitHub 用 SSH 秘密鍵 |
 | `~/.zshrc.work` | 会社固有の zsh alias（AWS ECR 設定など） |
+| `~/.config/gpg-keys/lapras.gpg.key` | LAPRAS 用 GPG 秘密鍵 |
+| `~/.config/gpg-keys/personal.gpg.key` | personal 用 GPG 秘密鍵 |
 
 ## 新しい PC へのセットアップ
 
@@ -129,52 +131,11 @@ chezmoi init --apply sasagar/dotfiles
 - age 暗号化ファイルの復号
 - `run_onchange_*` スクリプトによる Homebrew パッケージと mise ツールのインストール
 - `run_once_install-tpm.sh` による TPM (Tmux Plugin Manager) の自動インストール (personal のみ)
+- `run_onchange_after_import-gpg-keys.sh` による `~/.config/gpg-keys/*.gpg.key` の GPG キーリングへの自動 import
 
-## LAPRAS 用 GPG 鍵の追加 (work PC で初回のみ)
+## GPG 鍵の追加
 
-lapras-inc リポジトリで使う GPG 鍵を両PCで共有する手順。**初回は work PC で実行し、その後 personal PC では `chezmoi update` するだけで自動 import される**。
-
-### 前提
-
-- work PC の GPG キーリングに LAPRAS 用の秘密鍵が既に存在する
-- work PC で chezmoi が初期化済み (`chezmoi init --apply sasagar/dotfiles` 済み)
-- age 秘密鍵 (`~/.config/chezmoi/key.txt`) が配置済み
-
-### 手順
-
-```bash
-# 1. LAPRAS 用の鍵 ID を確認
-gpg --list-secret-keys --keyid-format=long
-
-# 2. 鍵をエクスポート (~/.config/gpg-keys/ は本運用で残るパス)
-mkdir -p ~/.config/gpg-keys && chmod 700 ~/.config/gpg-keys
-gpg --armor --export-secret-keys <KEYID> > ~/.config/gpg-keys/lapras.gpg.key
-gpg --armor --export             <KEYID> > ~/.config/gpg-keys/lapras.gpg.pub
-chmod 600 ~/.config/gpg-keys/lapras.gpg.key
-
-# 3. chezmoi 管理下に追加 (秘密鍵は age で暗号化)
-chezmoi add --encrypt ~/.config/gpg-keys/lapras.gpg.key
-chezmoi add           ~/.config/gpg-keys/lapras.gpg.pub
-
-# 4. .chezmoidata.toml の gpg_lapras を実際の KEYID に更新
-chezmoi cd
-# エディタで .chezmoidata.toml を開いて以下のように更新:
-#   gpg_lapras = "<KEYID>"
-
-# 5. 動作確認
-chezmoi apply
-
-# 6. commit & push
-git add -A
-git commit -m "feat: add shared lapras GPG key (encrypted)"
-git push
-```
-
-### 反映される内容
-
-- 両PCの `~/.gitconfig-lapras` に `signingkey = <KEYID>` が追加される
-- `~/ghq/github.com/lapras-inc/` 配下の git commit はこの鍵で自動署名される
-- personal PC で `chezmoi update` すると、暗号化された秘密鍵が decrypt され、`run_onchange_after_import-lapras-gpg.sh` が自動で `gpg --import` を実行する
+新しい GPG 鍵を両PCで共有したい場合の手順は `run_onchange_after_import-gpg-keys.sh.tmpl` 冒頭のコメントを参照。
 
 ## 日常の運用
 
@@ -218,6 +179,11 @@ chezmoi cd               # ソースディレクトリに移動
 ├── dot_bashrc.tmpl                               # → ~/.bashrc (テンプレート)
 ├── dot_config/
 │   ├── mise/config.toml.tmpl                     # → ~/.config/mise/config.toml (テンプレート)
+│   ├── private_gpg-keys/                         # → ~/.config/gpg-keys/ (600)
+│   │   ├── encrypted_private_lapras.gpg.key.age  # LAPRAS 用秘密鍵 (暗号化)
+│   │   ├── lapras.gpg.pub                        # LAPRAS 用公開鍵
+│   │   ├── encrypted_private_personal.gpg.key.age# personal 用秘密鍵 (暗号化)
+│   │   └── personal.gpg.pub                      # personal 用公開鍵
 │   └── starship.toml.tmpl                        # → ~/.config/starship.toml (テンプレート)
 ├── dot_fzf.bash                                  # → ~/.fzf.bash
 ├── dot_fzf.zsh                                   # → ~/.fzf.zsh
@@ -239,7 +205,7 @@ chezmoi cd               # ソースディレクトリに移動
 ├── run_once_install-tpm.sh.tmpl                  # TPM 自動インストール (personal のみ)
 ├── run_onchange_before_install-packages.sh.tmpl  # Brewfile 変更時に brew bundle を実行
 ├── run_onchange_after_install-mise-tools.sh.tmpl # mise 設定変更時に mise install を実行
-└── run_onchange_after_import-lapras-gpg.sh.tmpl  # LAPRAS GPG 鍵の自動 import
+└── run_onchange_after_import-gpg-keys.sh.tmpl    # ~/.config/gpg-keys/*.gpg.key を自動 import
 ```
 
 ## ファイル名の命名規則
