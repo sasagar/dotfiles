@@ -51,6 +51,9 @@ alias la='eza -a --icons --git'
 alias ll='eza -alh --icons --git'
 alias cat='bat'
 
+# --- ghq + fzf (cf: change directory to ghq-managed repo) ---
+alias cf='cd $(ghq list --full-path | fzf)'
+
 # --- mise (Node / pnpm 等のランタイム管理) ---
 eval "$(mise activate zsh)"
 
@@ -139,9 +142,6 @@ alias zj='zellij --layout default'
 
 # --- Python (brew) ---
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
-
-# --- ghq + fzf (cf: change directory to ghq-managed repo) ---
-alias cf='cd $(ghq list --full-path | fzf)'
 
 # --- AWSume ---
 alias awsume="source $(pyenv which awsume)"
