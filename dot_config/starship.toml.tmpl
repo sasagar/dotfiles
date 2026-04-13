@@ -216,9 +216,9 @@ Debian = " 󰣚 "
 [os]
 disabled = false
 format = """
-[](fg:#89b4fa)\
+[](fg:#89b4fa)\
 [$symbol]($style)\
-[](fg:#89b4fa)\
+[](fg:#89b4fa)\
 """
 style = "fg:#313244 bg:#89b4fa"
 
@@ -227,9 +227,9 @@ style = "fg:#313244 bg:#89b4fa"
 disabled = false
 symbol = ' 󰿆 sudo'
 format = """
-[](fg:#eba0ac)\
+[](fg:#eba0ac)\
 [$symbol]($style)\
-[](fg:#eba0ac)\
+[](fg:#eba0ac)\
 """
 style = "bold fg:#313244 bg:#eba0ac "
 
@@ -238,9 +238,9 @@ style = "bold fg:#313244 bg:#eba0ac "
 command = "$HOME/dotfiles/bin/ime_status.sh"
 when = "test -n \"$($HOME/dotfiles/bin/ime_status.sh)\""
 format = """
-[](fg:#f9e2af)\
+[](fg:#f9e2af)\
 [$output]($style)\
-[](fg:#f9e2af)\
+[](fg:#f9e2af)\
 """
 style = "bold fg:#313244 bg:#f9e2af"
 
@@ -249,9 +249,9 @@ style = "bold fg:#313244 bg:#f9e2af"
 command = "basename \"$VIRTUAL_ENV\""
 when = "test -n \"$VIRTUAL_ENV\""
 format = """
-[](fg:#cba6f7)\
+[](fg:#cba6f7)\
 [$output]($style)\
-[](fg:#cba6f7)\
+[](fg:#cba6f7)\
 """
 style = "bold fg:#313244 bg:#cba6f7"
 
@@ -262,24 +262,24 @@ command = """
 jj log -r @ -n 1 --no-graph --color never --template 'change_id.short() ++ if(bookmarks, " (" ++ bookmarks.join(", ") ++ ")")' | tr -d '\n'
 """
 style = "bold fg:#313244 bg:#fab387"
-format = "[](fg:#fab387)[󰘬 $output]($style)[](fg:#fab387)"
+format = "[](fg:#fab387)[󰘬 $output]($style)[](fg:#fab387)"
 
 ###########################################
 [direnv]
 disabled = false
 format = """
-[](fg:#89dceb)\
+[](fg:#89dceb)\
 [$symbol$allowed]($style)\
-[](fg:#89dceb)\
+[](fg:#89dceb)\
 """
 style = "bold fg:#313244 bg:#89dceb"
 
 ###########################################
 [conda]
 format = """
-[](fg:#2e8b57)\
+[](fg:#2e8b57)\
 [via $symbol$environment]($style)\
-[](fg:#2e8b57)\
+[](fg:#2e8b57)\
 """
 symbol = "🐍 "
 style = "bold fg:#313244 bg:#2e8b57"
@@ -293,10 +293,10 @@ truncate_to_repo = false
 home_symbol = '󰋞 ~'
 read_only = ' 󰌾 '
 format = """
-[](fg:#b4befe)\
+[](fg:#b4befe)\
 [$path]($style)\
 [$read_only]($read_only_style)\
-[](fg:#b4befe)\
+[](fg:#b4befe)\
 """
 style = 'bold fg:#313244 bg:#b4befe'
 read_only_style = 'bold fg:#313244 bg:#b4befe'
@@ -308,7 +308,7 @@ truncation_length = 4
 truncation_symbol = ''
 style = 'bold fg:#89dceb bg:#45475a'
 format = """
-[](fg:#45475a)\
+[](fg:#45475a)\
 [$symbol$branch(:$remote_branch)]($style)\
 """
 
@@ -339,7 +339,7 @@ added_style = 'bold fg:#a6e3a1 bg:#45475a'
 deleted_style = 'bold fg:#89b4fa  bg:#45475a'
 format = """
 [  ](fg:#89dceb bg:#45475a)\
-[+$added]($added_style)[-$deleted]($deleted_style)[](fg:#45475a)\
+[+$added]($added_style)[-$deleted]($deleted_style)[](fg:#45475a)\
 """
 
 ###########################################
@@ -351,19 +351,19 @@ style = 'fg:#89b4fa bg:none'
 [python]
 pyenv_version_name = false
 symbol = '[ ](fg:#f9e2af bg:#8093fd)'
-format = '[](fg:#8093fd)[ ${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)[](fg:#8093fd)'
+format = '[](fg:#8093fd)[ ${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)[](fg:#8093fd)'
 style = 'bold fg:#313244 bg:#8093fd'
 
 ###########################################
 [lua]
 symbol = "[ ](fg:#1e66f5 bg:#89b4fa)"
-format = '[](fg:#89b4fa)[ ${symbol}(${version})]($style)[](fg:#89b4fa)'
+format = '[](fg:#89b4fa)[ ${symbol}(${version})]($style)[](fg:#89b4fa)'
 style = 'bold fg:#313244 bg:#89b4fa'
 
 ###########################################
 [rust]
 symbol = "[󱘗 ](fg:#e64553 bg:#eba0ac)"
-format = '[](fg:#eba0ac)[ ${symbol}(${version})]($style)[](fg:#eba0ac)'
+format = '[](fg:#eba0ac)[ ${symbol}(${version})]($style)[](fg:#eba0ac)'
 style = 'bold fg:#313244 bg:#eba0ac'
 
 ###########################################
