@@ -10,6 +10,7 @@ Host *
 	TCPKeepAlive yes
 	IPQoS cs1
 
+{{ end -}}
 Host kent-and-co.com
 	HostName REDACTED-host.REDACTED.example.com
 	User root
@@ -27,9 +28,8 @@ Host jellyfin
 	HostName REDACTED-IP
 	User root
 	UseKeychain yes
-	IdentityFile ~/.ssh/id_rsa
+	IdentityFile ~/.ssh/jellyfin_id_rsa
 
-{{ end -}}
 Host github.com
   HostName github.com
   User git
