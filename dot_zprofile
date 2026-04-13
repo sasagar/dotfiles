@@ -1,5 +1,5 @@
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# brew shellenv は .zshenv に移動済み (login / non-login 両対応)
 
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.

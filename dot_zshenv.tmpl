@@ -1,3 +1,10 @@
+# Homebrew の PATH を全 zsh 起動タイミング (login/non-login) で通す。
+# .zprofile は login shell でしか実行されないため、Ghostty 等の
+# non-login 起動で /opt/homebrew/bin が欠けるのを防ぐ目的で .zshenv に置く。
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # zoxide doctor はスナップショットベースのサブシェル (Claude Code 等) で
 # chpwd_functions が復元されず誤検知するため無効化する
 export _ZO_DOCTOR=0
