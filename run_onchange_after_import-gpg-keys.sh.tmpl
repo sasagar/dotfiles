@@ -1,0 +1,71 @@
+#!/bin/bash
+# Trigger (re-render when any pub key changes):
+#   lapras: {{ include "dot_config/private_gpg-keys/lapras.gpg.pub" | sha256sum }}
+#   personal: {{ include "dot_config/private_gpg-keys/personal.gpg.pub" | sha256sum }}
+#
+# ~/.config/gpg-keys/ に配置された *.gpg.key を GPG キーリングに import する。
+# 公開鍵 + 秘密鍵 のペア (例: lapras.gpg.pub / lapras.gpg.key) を自動検出。
+#
+# 新しい鍵を追加するには:
+#   mkdir -p ~/.config/gpg-keys && chmod 700 ~/.config/gpg-keys
+#   gpg --armor --export             <KEYID> > ~/.config/gpg-keys/<label>.gpg.pub
+#   gpg --armor --export-secret-keys <KEYID> > ~/.config/gpg-keys/<label>.gpg.key
+#   chmod 600 ~/.config/gpg-keys/<label>.gpg.key
+#   chezmoi add --encrypt ~/.config/gpg-keys/<label>.gpg.key
+#   chezmoi add           ~/.config/gpg-keys/<label>.gpg.pub
+#   # このスクリプトの Trigger コメントに新しい鍵の行を追加
+#   chezmoi cd && git add -A && git commit -m "add: <label> GPG key" && git push
+
+set -euo pipefail
+
+GPG_DIR="$HOME/.config/gpg-keys"
+
+if [ ! -d "$GPG_DIR" ]; then
+  echo "No GPG key directory at $GPG_DIR — nothing to import"
+  exit 0
+fi
+
+if ! command -v gpg >/dev/null 2>&1; then
+  echo "gpg not installed — skipping GPG key import"
+  exit 0
+fi
+
+# GPG agent が TTY を要求する環境向け
+export GPG_TTY="${GPG_TTY:-$(tty 2>/dev/null || echo '/dev/null')}"
+
+import_key() {
+  local key_path="$1"
+  local pub_path="${key_path%.key}.pub"
+  local label
+  label=$(basename "$key_path" .gpg.key)
+
+  if [ ! -f "$pub_path" ]; then
+    echo "[$label] 公開鍵が見つかりません: $pub_path — skip"
+    return 0
+  fi
+
+  local fp
+  fp=$(gpg --show-keys --with-colons "$pub_path" 2>/dev/null | awk -F: '/^fpr:/{print $10; exit}' || true)
+
+  if [ -z "$fp" ]; then
+    echo "[$label] 公開鍵から fingerprint を取得できませんでした — skip"
+    return 0
+  fi
+
+  if gpg --list-secret-keys "$fp" >/dev/null 2>&1; then
+    echo "[$label] GPG 秘密鍵は既に keyring に存在 ($fp)"
+    return 0
+  fi
+
+  echo "[$label] GPG 鍵を import: $fp"
+  gpg --import "$pub_path" || return 1
+  gpg --import "$key_path" || return 1
+  echo "[$label] import 完了"
+}
+
+shopt -s nullglob
+for key_path in "$GPG_DIR"/*.gpg.key; do
+  import_key "$key_path" || {
+    echo "Warning: $(basename "$key_path") の import に失敗しました (TTY の有無など確認してください)"
+  }
+done
