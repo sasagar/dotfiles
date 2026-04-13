@@ -1,0 +1,44 @@
+# KTRZ Monokai theme for Ghostty
+# Based on https://github.com/ixkaito/ktrz-monokai
+
+background = 1e2123
+foreground = f8f8f8
+
+cursor-color = f8f8f8
+cursor-text = 1e2123
+
+selection-background = 49483e
+selection-foreground = f8f8f8
+
+# Palette (0-15)
+# Black
+palette = 0=#1e2123
+palette = 8=#5c6166
+
+# Red
+palette = 1=#d2304b
+palette = 9=#f92672
+
+# Green
+palette = 2=#a6e22e
+palette = 10=#b8f345
+
+# Yellow
+palette = 3=#e6db74
+palette = 11=#f4ee89
+
+# Blue (using purple like Monokai)
+palette = 4=#ae81ff
+palette = 12=#c4a2ff
+
+# Magenta
+palette = 5=#f92672
+palette = 13=#ff5a96
+
+# Cyan
+palette = 6=#66d9ef
+palette = 14=#78e7ff
+
+# White
+palette = 7=#f8f8f8
+palette = 15=#ffffff

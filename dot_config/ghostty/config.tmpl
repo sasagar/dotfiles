@@ -1,0 +1,15 @@
+font-family = "MonaspiceKr Nerd Font Mono"
+font-family = "Rounded M+ 1m"
+font-size = 14
+
+{{- if eq .machine "personal" }}
+
+# ===== KTRZ Monokai Theme =====
+theme = ktrz-monokai
+{{- else }}
+
+# ===== LAPRAS Color Scheme =====
+# LAPRAS のベースカラー (濃紺 + 明るい灰白)
+background = #1A202C
+foreground = #E2E8F0
+{{- end }}
