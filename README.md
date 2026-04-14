@@ -30,7 +30,7 @@
 |---|---|
 | `~/.gitconfig` | `user.email` をデータ変数化、`includeIf` で会社リポジトリ用に上書き |
 | `~/.gitconfig-lapras` | 会社リポジトリ用のメールアドレスを分離 |
-| `~/.ssh/config` | OrbStack の include 行を work のみに限定 |
+| `~/.ssh/config` | OrbStack の include 行を work のみに限定、機密ホストを別ファイルに Include |
 | `~/.config/starship.toml` | work / personal で完全に分岐 |
 | `~/.config/ghostty/config` | フォント共通、カラーテーマを machine 別分岐 |
 
@@ -38,6 +38,7 @@
 
 | ファイル | 内容 |
 |---|---|
+| `~/.ssh/config-private` | セルフホスト/クラウドの Host 定義 (ホスト名/IP 保護のため暗号化) |
 | `~/.ssh/id_ed25519_github` | GitHub 用 SSH 秘密鍵 |
 | `~/.ssh/jellyfin_id_rsa` | Jellyfin サーバー用 SSH 秘密鍵 |
 | `~/.ssh/oracle-ssh-key-2024-07-10.key` | Oracle Cloud 用 SSH 秘密鍵 |
@@ -76,8 +77,8 @@ age 秘密鍵と chezmoi.toml は VaultWarden のセキュアノート
 # 必要なら Bitwarden CLI を先にインストール
 brew install bitwarden-cli
 
-# セルフホストの場合はサーバー URL を設定
-bw config server https://vw.REDACTED.example.com
+# セルフホストの場合はサーバー URL を設定 (URL は 1Password 等で管理)
+bw config server https://<vaultwarden-server>
 
 # ログインして unlock
 bw login                          # 初回のみ
@@ -208,6 +209,7 @@ chezmoi cd               # ソースディレクトリに移動
 ├── encrypted_private_dot_zshrc.work.age          # → ~/.zshrc.work (暗号化)
 ├── private_dot_ssh/
 │   ├── config.tmpl                               # → ~/.ssh/config (テンプレート)
+│   ├── encrypted_private_config-private.age      # → ~/.ssh/config-private (暗号化: 機密ホスト)
 │   ├── encrypted_private_id_ed25519_github.age   # → ~/.ssh/id_ed25519_github (暗号化)
 │   ├── id_ed25519_github.pub                     # → ~/.ssh/id_ed25519_github.pub
 │   ├── encrypted_private_jellyfin_id_rsa.age     # Jellyfin 用 SSH 秘密鍵 (暗号化)

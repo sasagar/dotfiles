@@ -11,24 +11,9 @@ Host *
 	IPQoS cs1
 
 {{ end -}}
-Host kent-and-co.com
-	HostName REDACTED-host.REDACTED.example.com
-	User root
-	UseKeychain yes
-	IdentityFile ~/.ssh/conoha20240316_ed25519_2048
-	ProxyCommand /opt/homebrew/bin/cloudflared access ssh --hostname %h
-
-Host oracle1
-	HostName REDACTED-IP
-	User ubuntu
-	UseKeychain yes
-	IdentityFile ~/.ssh/oracle-ssh-key-2024-07-10.key
-
-Host jellyfin
-	HostName REDACTED-IP
-	User root
-	UseKeychain yes
-	IdentityFile ~/.ssh/jellyfin_id_rsa
+# Private hosts (self-hosted servers, cloud instances) are kept in an
+# age-encrypted file to avoid leaking hostnames/IPs to the public repo.
+Include ~/.ssh/config-private
 
 Host github.com
   HostName github.com
