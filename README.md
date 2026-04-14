@@ -21,7 +21,8 @@
 | `~/.tmux.conf` | tmux 設定 |
 | `~/.fzf.zsh`, `~/.fzf.bash` | fzf 設定 |
 | `~/.config/mise/config.toml` | mise のランタイム定義 |
-| `~/.ssh/id_ed25519_github.pub` | SSH 公開鍵 |
+| `~/.config/ghostty/themes/ktrz-monokai` | Ghostty カラーテーマ (personal のみ) |
+| `~/.ssh/id_ed25519_github.pub`, `jellyfin_id_rsa.pub`, `conoha20240316_ed25519_2048.pub` | SSH 公開鍵 |
 
 ### テンプレート（`.tmpl`）
 
@@ -31,12 +32,16 @@
 | `~/.gitconfig-lapras` | 会社リポジトリ用のメールアドレスを分離 |
 | `~/.ssh/config` | OrbStack の include 行を work のみに限定 |
 | `~/.config/starship.toml` | work / personal で完全に分岐 |
+| `~/.config/ghostty/config` | フォント共通、カラーテーマを machine 別分岐 |
 
 ### age 暗号化ファイル
 
 | ファイル | 内容 |
 |---|---|
 | `~/.ssh/id_ed25519_github` | GitHub 用 SSH 秘密鍵 |
+| `~/.ssh/jellyfin_id_rsa` | Jellyfin サーバー用 SSH 秘密鍵 |
+| `~/.ssh/oracle-ssh-key-2024-07-10.key` | Oracle Cloud 用 SSH 秘密鍵 |
+| `~/.ssh/conoha20240316_ed25519_2048` | ConoHa 用 SSH 秘密鍵 |
 | `~/.zshrc.work` | 会社固有の zsh alias（AWS ECR 設定など） |
 | `~/.config/gpg-keys/lapras.gpg.key` | LAPRAS 用 GPG 秘密鍵 |
 | `~/.config/gpg-keys/personal.gpg.key` | personal 用 GPG 秘密鍵 |
@@ -178,6 +183,9 @@ chezmoi cd               # ソースディレクトリに移動
 ├── Brewfile.tmpl                                 # Homebrew パッケージリスト (machine別分岐)
 ├── dot_bashrc.tmpl                               # → ~/.bashrc (テンプレート)
 ├── dot_config/
+│   ├── ghostty/
+│   │   ├── config.tmpl                           # → ~/.config/ghostty/config (テンプレート)
+│   │   └── themes/ktrz-monokai                   # personal のみ配置
 │   ├── mise/config.toml.tmpl                     # → ~/.config/mise/config.toml (テンプレート)
 │   ├── private_gpg-keys/                         # → ~/.config/gpg-keys/ (600)
 │   │   ├── encrypted_private_lapras.gpg.key.age  # LAPRAS 用秘密鍵 (暗号化)
@@ -201,7 +209,12 @@ chezmoi cd               # ソースディレクトリに移動
 ├── private_dot_ssh/
 │   ├── config.tmpl                               # → ~/.ssh/config (テンプレート)
 │   ├── encrypted_private_id_ed25519_github.age   # → ~/.ssh/id_ed25519_github (暗号化)
-│   └── id_ed25519_github.pub                     # → ~/.ssh/id_ed25519_github.pub
+│   ├── id_ed25519_github.pub                     # → ~/.ssh/id_ed25519_github.pub
+│   ├── encrypted_private_jellyfin_id_rsa.age     # Jellyfin 用 SSH 秘密鍵 (暗号化)
+│   ├── jellyfin_id_rsa.pub                       # Jellyfin 用 SSH 公開鍵
+│   ├── encrypted_private_conoha20240316_ed25519_2048.age  # ConoHa 用 SSH 秘密鍵 (暗号化)
+│   ├── conoha20240316_ed25519_2048.pub           # ConoHa 用 SSH 公開鍵
+│   └── encrypted_private_oracle-ssh-key-2024-07-10.key.age # Oracle Cloud 用 SSH 秘密鍵 (暗号化)
 ├── run_once_install-tpm.sh.tmpl                  # TPM 自動インストール (personal のみ)
 ├── run_onchange_before_install-packages.sh.tmpl  # Brewfile 変更時に brew bundle を実行
 ├── run_onchange_after_install-mise-tools.sh.tmpl # mise 設定変更時に mise install を実行
