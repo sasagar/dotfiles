@@ -4,3 +4,6 @@ README.md
 .tmux/quake.sh
 .config/ghostty/themes/ktrz-monokai
 {{- end }}
+{{- if ne .machine "work" }}
+.config/ghostty/themes/lapras
+{{- end }}

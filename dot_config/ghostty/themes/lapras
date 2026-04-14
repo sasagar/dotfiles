@@ -1,0 +1,5 @@
+# LAPRAS theme for Ghostty
+# LAPRAS のベースカラー (濃紺 + 明るい灰白)
+
+background = 1A202C
+foreground = E2E8F0

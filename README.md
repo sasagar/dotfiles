@@ -21,7 +21,7 @@
 | `~/.tmux.conf` | tmux 設定 |
 | `~/.fzf.zsh`, `~/.fzf.bash` | fzf 設定 |
 | `~/.config/mise/config.toml` | mise のランタイム定義 |
-| `~/.config/ghostty/themes/ktrz-monokai` | Ghostty カラーテーマ (personal のみ) |
+| `~/.config/ghostty/themes/{ktrz-monokai,lapras}` | Ghostty カラーテーマ (machine 別に配置) |
 | `~/.ssh/id_ed25519_github.pub`, `jellyfin_id_rsa.pub`, `conoha20240316_ed25519_2048.pub` | SSH 公開鍵 |
 
 ### テンプレート（`.tmpl`）
@@ -186,7 +186,9 @@ chezmoi cd               # ソースディレクトリに移動
 ├── dot_config/
 │   ├── ghostty/
 │   │   ├── config.tmpl                           # → ~/.config/ghostty/config (テンプレート)
-│   │   └── themes/ktrz-monokai                   # personal のみ配置
+│   │   └── themes/
+│   │       ├── ktrz-monokai                      # personal のみ配置
+│   │       └── lapras                            # work のみ配置
 │   ├── mise/config.toml.tmpl                     # → ~/.config/mise/config.toml (テンプレート)
 │   ├── private_gpg-keys/                         # → ~/.config/gpg-keys/ (600)
 │   │   ├── encrypted_private_lapras.gpg.key.age  # LAPRAS 用秘密鍵 (暗号化)
