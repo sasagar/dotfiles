@@ -144,7 +144,7 @@ alias zj='zellij --layout default'
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
 
 # --- AWSume ---
-alias awsume="source $(pyenv which awsume)"
+alias awsume="source ${commands[awsume]}"
 _awsume() {
     local -a opts
     opts=(${(f)"$(awsume-autocomplete)"})
