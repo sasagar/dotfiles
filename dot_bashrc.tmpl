@@ -6,7 +6,7 @@
 {{- else }}
 
 #AWSume alias to source the AWSume script
-alias awsume="source \$(pyenv which awsume)"
+alias awsume="source \$(type -P awsume)"
 
 #Auto-Complete function for AWSume
 _awsume() {
@@ -19,4 +19,6 @@ _awsume() {
     return 0
 }
 complete -F _awsume awsume
+
+. "$HOME/.cargo/env"
 {{- end }}

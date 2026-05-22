@@ -9,12 +9,4 @@ fi
 # chpwd_functions が復元されず誤検知するため無効化する
 export _ZO_DOCTOR=0
 
-{{- if eq .machine "personal" }}
 . "$HOME/.cargo/env"
-{{- else }}
-#AWSume alias to source the AWSume script
-alias awsume="source \$(pyenv which awsume)"
-
-#Auto-Complete function for AWSume
-fpath=(~/.awsume/zsh-autocomplete/ $fpath)
-{{- end }}
