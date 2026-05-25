@@ -177,6 +177,9 @@ alias cd='z'
 alias zi='z -i'
 {{- end }}
 
+# --- bun completions ---
+[ -s "{{ .chezmoi.homeDir }}/.bun/_bun" ] && source "{{ .chezmoi.homeDir }}/.bun/_bun"
+
 # --- シンタックスハイライト（必ず最後に読み込む） ---
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
