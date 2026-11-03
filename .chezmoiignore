@@ -20,3 +20,7 @@ README.md
 {{- if ne .machine "work" }}
 .config/ghostty/themes/lapras
 {{- end }}
+{{- if ne .machine "server" }}
+.local/bin/claude-mem-worker.sh
+Library
+{{- end }}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- claude-mem のワーカーを常駐させる（server のみ）。理由は ~/.local/bin/claude-mem-worker.sh -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.sasapiyo.claude-mem-worker</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>{{ .chezmoi.homeDir }}/.local/bin/claude-mem-worker.sh</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>30</integer>
+  <key>StandardOutPath</key>
+  <string>{{ .chezmoi.homeDir }}/.claude-mem/logs/launchd-worker.log</string>
+  <key>StandardErrorPath</key>
+  <string>{{ .chezmoi.homeDir }}/.claude-mem/logs/launchd-worker.log</string>
+</dict>
+</plist>
