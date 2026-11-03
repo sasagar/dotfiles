@@ -134,6 +134,12 @@ ssh() {
 # --- Zellij alias ---
 alias zj='zellij --layout default'
 
+# --- direnv ---
+eval "$(direnv hook zsh)"
+
+# --- 公開リポジトリに置かない personal の設定（App Store Connect の鍵 ID など。age で暗号化） ---
+[ -f ~/.zshrc.personal ] && source ~/.zshrc.personal
+
 {{- else if eq .machine "work" }}
 
 # ==================================================================
@@ -183,3 +189,11 @@ alias zi='z -i'
 # --- シンタックスハイライト（必ず最後に読み込む） ---
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
+{{- if eq .machine "personal" }}
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '{{ .chezmoi.homeDir }}/google-cloud-sdk/path.zsh.inc' ]; then . '{{ .chezmoi.homeDir }}/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '{{ .chezmoi.homeDir }}/google-cloud-sdk/completion.zsh.inc' ]; then . '{{ .chezmoi.homeDir }}/google-cloud-sdk/completion.zsh.inc'; fi
+{{- end }}

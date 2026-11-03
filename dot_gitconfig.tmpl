@@ -4,6 +4,10 @@
 	signingkey = C872B16845393388
 [includeIf "gitdir:~/ghq/github.com/lapras-inc/"]
 	path = ~/.gitconfig-lapras
+{{- if ne .machine "work" }}
+[includeIf "gitdir/i:~/ghq/github.com/love-rox/"]
+	path = ~/.gitconfig-love-rox
+{{- end }}
 [init]
 	defaultBranch = main
 [pull]

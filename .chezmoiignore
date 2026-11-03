@@ -11,6 +11,12 @@ README.md
 .gitconfig-lapras
 .zshrc.work
 {{- end }}
+{{- if eq .machine "work" }}
+.gitconfig-love-rox
+{{- end }}
+{{- if ne .machine "personal" }}
+.zshrc.personal
+{{- end }}
 {{- if ne .machine "work" }}
 .config/ghostty/themes/lapras
 {{- end }}
