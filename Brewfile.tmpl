@@ -105,5 +105,7 @@ cask "thock"
 {{- if eq .machine "server" }}
 
 # === Server-only（M1 開発サーバー）===
+# uv は Claude Code の MCP（serena を uvx で起動）に要る
+brew "uv"
 cask "orbstack"
 {{- end }}
