@@ -10,6 +10,12 @@ Host *
 	TCPKeepAlive yes
 	IPQoS cs1
 
+{{ else if eq .machine "server" -}}
+Host *
+	ServerAliveInterval 60
+	TCPKeepAlive yes
+	IPQoS cs1
+
 {{ end -}}
 # Private hosts (self-hosted servers, cloud instances) are kept in an
 # age-encrypted file to avoid leaking hostnames/IPs to the public repo.

@@ -4,6 +4,13 @@ README.md
 .tmux/quake.sh
 .config/ghostty/themes/ktrz-monokai
 {{- end }}
+{{- if eq .machine "server" }}
+.config/ghostty
+.config/gpg-keys/lapras.gpg.key
+.config/gpg-keys/lapras.gpg.pub
+.gitconfig-lapras
+.zshrc.work
+{{- end }}
 {{- if ne .machine "work" }}
 .config/ghostty/themes/lapras
 {{- end }}

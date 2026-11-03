@@ -4,7 +4,7 @@
 
 ## 特徴
 
-- **複数PC対応**: `work` / `personal` の2種類のマシンで設定を切り替え
+- **複数PC対応**: `work` / `personal` / `server` の3種類のマシンで設定を切り替え（`server` は M1 開発サーバー。GUI の cask・lapras 関係を入れず、SSH の非対話コマンドでも PATH と Claude Code のトークンが通るようにする）
 - **age 暗号化**: SSH 秘密鍵や機密設定は age で暗号化して public リポジトリに安全に保存
 - **テンプレート化**: メールアドレスやホスト固有の設定は chezmoi データ変数で差し替え
 - **自動インストール**: Brewfile と mise 設定に変更があれば `chezmoi apply` 時に自動反映

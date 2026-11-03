@@ -10,7 +10,11 @@
 	ff = only
 [core]
 	autocrlf = input
+{{- if eq .machine "server" }}
+	editor = vim
+{{- else }}
 	editor = code --wait
+{{- end }}
 [commit]
 	gpgsign = true
 [tag]

@@ -3,6 +3,9 @@ ghq = "1.9.4"
 {{- if eq .machine "personal" }}
 node = ["24", "22"]
 pnpm = "latest"
+{{- else if eq .machine "server" }}
+node = "26"
+pnpm = "latest"
 {{- else }}
 jq = "latest"
 node = "22"

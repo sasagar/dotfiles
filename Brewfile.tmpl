@@ -39,11 +39,14 @@ brew "pyenv"
 brew "gnupg"
 brew "pinentry-mac"
 
-# === Casks (both) ===
+{{- if ne .machine "server" }}
+
+# === Casks (work / personal) ===
 cask "1password-cli"
 cask "font-rounded-mplus"
 cask "font-symbols-only-nerd-font"
 cask "ghostty"
+{{- end }}
 
 {{- if eq .machine "work" }}
 
@@ -97,4 +100,10 @@ cask "blackhole-2ch"
 cask "macfuse"
 cask "miniforge"
 cask "thock"
+{{- end }}
+
+{{- if eq .machine "server" }}
+
+# === Server-only（M1 開発サーバー）===
+cask "orbstack"
 {{- end }}

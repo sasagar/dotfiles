@@ -9,4 +9,14 @@ fi
 # chpwd_functions が復元されず誤検知するため無効化する
 export _ZO_DOCTOR=0
 
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+{{- if eq .machine "server" }}
+
+# SSH の非対話コマンド（Orca のエージェントなど）でも使えるように PATH をここで通す。
+# .zshrc の mise activate は対話シェルでしか効かないので shims を足す。
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
+
+# login キーチェーンは SSH のセッションから読めないので、Claude Code は
+# `claude setup-token` の長期トークンをファイル（600）から渡す。
+[ -r "$HOME/.config/claude-code/oauth-token" ] && export CLAUDE_CODE_OAUTH_TOKEN="$(cat "$HOME/.config/claude-code/oauth-token")"
+{{- end }}
