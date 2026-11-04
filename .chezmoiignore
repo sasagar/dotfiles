@@ -26,6 +26,7 @@ Library/LaunchAgents/com.sasapiyo.claude-mem-worker.plist
 {{- end }}
 {{- if ne .machine "personal" }}
 .local/bin/m1-memory-sync.sh
+.local/bin/m1-mem
 Library/LaunchAgents/com.sasapiyo.m1-memory-sync.plist
 {{- end }}
 {{- if eq .machine "work" }}
