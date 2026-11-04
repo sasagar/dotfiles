@@ -44,5 +44,9 @@ mv "$MEM/claude-mem.db" "$MEM/chroma" "$MEM/chroma-sync-state.json" "$PREV/"
 rm -f "$MEM/claude-mem.db-wal" "$MEM/claude-mem.db-shm"
 mv "$STAGE/claude-mem.db" "$STAGE/chroma" "$STAGE/chroma-sync-state.json" "$MEM/"
 rm -rf "$STAGE"
-# ワーカーは次に Claude Code のフックが動いたときに起きる
+# ワーカーを起こし直す（フックを待つと次に Claude Code を使うまで止まったままになる）
+DIR=$(jq -r '.plugins["claude-mem@thedotmack"][0].installPath' "$HOME/.claude/plugins/installed_plugins.json")
+nohup "$HOME/.bun/bin/bun" "$DIR/scripts/worker-service.cjs" --daemon >/dev/null 2>&1 &
+for i in {1..30}; do curl -sf -m2 http://127.0.0.1:37777/api/health >/dev/null && break; sleep 1; done
+curl -sf -m2 http://127.0.0.1:37777/api/health >/dev/null && echo "-- ワーカー起動" || echo "-- ワーカーが起きない（次のフックで起きるはず）"
 echo "== $(date '+%F %T') 完了（observations: $(sqlite3 "$MEM/claude-mem.db" 'SELECT count(*) FROM observations;')）"
