@@ -22,5 +22,12 @@ README.md
 {{- end }}
 {{- if ne .machine "server" }}
 .local/bin/claude-mem-worker.sh
+Library/LaunchAgents/com.sasapiyo.claude-mem-worker.plist
+{{- end }}
+{{- if ne .machine "personal" }}
+.local/bin/m1-memory-sync.sh
+Library/LaunchAgents/com.sasapiyo.m1-memory-sync.plist
+{{- end }}
+{{- if eq .machine "work" }}
 Library
 {{- end }}
