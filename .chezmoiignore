@@ -13,6 +13,9 @@ README.md
 {{- end }}
 {{- if eq .machine "work" }}
 .gitconfig-love-rox
+# 家の Volumio 用。work には配らない
+.ssh/id_ed25519_volumio
+.ssh/id_ed25519_volumio.pub
 {{- end }}
 {{- if ne .machine "personal" }}
 .zshrc.personal
