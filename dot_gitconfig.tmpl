@@ -19,6 +19,15 @@
 {{- else }}
 	editor = code --wait
 {{- end }}
+{{- if eq .machine "server" }}
+# SSH のセッションからはキーチェーン（osxkeychain）が読めないので、GitHub の https は gh のトークンで通す
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+{{- end }}
 [commit]
 	gpgsign = true
 [tag]
