@@ -109,3 +109,11 @@ cask "thock"
 brew "uv"
 cask "orbstack"
 {{- end }}
+
+{{- if or (eq .machine "personal") (eq .machine "server") }}
+
+# === Infra（sasagar/infra の tofu・ansible。M4 と M1 の両方で使う）===
+brew "opentofu"
+brew "ansible"
+brew "oci-cli"
+{{- end }}
