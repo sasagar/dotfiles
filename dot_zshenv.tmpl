@@ -16,7 +16,9 @@ export _ZO_DOCTOR=0
 # .zshrc の mise activate は対話シェルでしか効かないので shims を足す。
 export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
 
-# login キーチェーンは SSH のセッションから読めないので、Claude Code は
-# `claude setup-token` の長期トークンをファイル（600）から渡す。
-[ -r "$HOME/.config/claude-code/oauth-token" ] && export CLAUDE_CODE_OAUTH_TOKEN="$(cat "$HOME/.config/claude-code/oauth-token")"
+# 2026-11-06: Remote Control は長期トークン（推論専用）では使えないので、Claude Code は
+# `claude auth login` のフルスコープ認証に切り替えた。トークンの export は外してある。
+# 戻すときは次の行のコメントを外す（トークンファイルは残してある）。
+# claude-mem のワーカーは ~/.local/bin/claude-mem-worker.sh が自分でファイルを読む。
+# [ -r "$HOME/.config/claude-code/oauth-token" ] && export CLAUDE_CODE_OAUTH_TOKEN="$(cat "$HOME/.config/claude-code/oauth-token")"
 {{- end }}
