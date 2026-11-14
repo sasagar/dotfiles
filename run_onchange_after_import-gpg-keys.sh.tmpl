@@ -53,7 +53,9 @@ import_key() {
   fi
 
   if gpg --list-secret-keys "$fp" >/dev/null 2>&1; then
-    echo "[$label] GPG 秘密鍵は既に keyring に存在 ($fp)"
+    # 公開鍵に足した ID（例: GitHub の noreply）を取り込むため、公開鍵だけは毎回 import する
+    gpg --import "$pub_path" || return 1
+    echo "[$label] GPG 秘密鍵は既に keyring に存在 ($fp)、公開鍵を更新"
     return 0
   fi
 

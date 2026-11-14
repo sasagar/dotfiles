@@ -4,6 +4,11 @@
 	signingkey = C872B16845393388
 [includeIf "gitdir:~/ghq/github.com/lapras-inc/"]
 	path = ~/.gitconfig-lapras
+# GitHub がメールを出す push を断るので、sasagar のリポジトリと chezmoi のソースは noreply で署名する
+[includeIf "gitdir:~/ghq/github.com/sasagar/"]
+	path = ~/.gitconfig-sasapiyo
+[includeIf "gitdir:~/.local/share/chezmoi/"]
+	path = ~/.gitconfig-sasapiyo
 {{- if ne .machine "work" }}
 [includeIf "gitdir/i:~/ghq/github.com/love-rox/"]
 	path = ~/.gitconfig-love-rox
