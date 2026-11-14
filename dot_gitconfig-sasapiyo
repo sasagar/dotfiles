@@ -1,4 +1,4 @@
-# ~/ghq/github.com/sasagar/ と chezmoi のソース用。GitHub の noreply で署名し、Verified にする
+# ~/ghq/github.com/sasagar/・bktsk-app/ と chezmoi のソース用。GitHub の noreply で署名し、Verified にする
 # （署名鍵は ~/.gitconfig の C872B16845393388。この鍵に noreply の ID を足してある）
 [user]
 	name = SASAPIYO
