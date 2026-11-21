@@ -1,0 +1,5 @@
+# POSIX sh のログインシェル（`sh -lc …`）向けの PATH。
+# zsh の設定（.zshenv/.zshrc）は sh からは読まれないので、T3 Code のように
+# `sh -lc "command -v claude"` でエージェントを探すアプリから見えるようにここでも通す（2026-11-22）。
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
